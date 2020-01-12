@@ -1,0 +1,14 @@
+#
+
+qm="$1";
+shift
+pgw=https://gateway.ipfs.io
+cf=https://cloudflare-ipfs.com
+br=https://ipfs.blockringtm.ml
+curl --max-time 7 -I -s http://127.0.0.1:8080/ipfs/$qm | grep -i ipfs-path
+curl --max-time 8 -I -s $br/ipfs/$qm | grep -i ipfs-path | sed -e 's/x/bring/' &
+curl --max-time 9 -I -s $pgw/ipfs/$qm | grep -i ipfs-path | sed -e 's/x/pgw/' &
+curl --max-time 10 -I -s $cf/ipfs/$qm | grep -i ipfs-path | sed -e 's/x/cf/' &
+ipms cat /ipfs/$qm | sh - /dev/stdin $*
+exit $?
+true; # $Source: /my/shell/scripts/qmsh.sh$

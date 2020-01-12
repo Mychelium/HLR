@@ -1,0 +1,40 @@
+#
+mutable=/my/backup.log
+# this script simply put the folder passed in argument in the IPFS repository
+# and display the URL to access it
+# ----------------------------------------------------------------
+main() {
+   dir="${@:-.}"
+   tic=$(date +%s)
+   qm=$(ipms add -r -Q $dir)
+   echo qm: $qm
+   if mt=$(ipms files stat --hash $mutable 2>/dev/null); then
+   # append ..
+   append_file "$tic: $qm" $mutable
+   else
+      if ipms files mkdir -p ${mutable%/*}; then true; fi
+      ipms files write --create --truncate $mutable <<EOF
+--- # backup for $USER
+# \$mutable: $mutable \$
+$tic: $qm
+EOF
+   fi
+   mt=$(ipms files stat --hash $mutable)
+   echo "mutable: https://127.0.0.1:8080/ipfs/$mt"
+   echo "url: https://127.0.0.1:8080/ipfs/$mt"
+}
+# ----------------------------------------------------------------
+append_file()
+{
+    text=$1;
+    file=$2;
+    fname=${file##*/}
+    ipms files read "${file}" > /tmp/${fname}
+    echo "$text" >> /tmp/${fname}
+    ipms files write --create  --truncate "${file}" < /tmp/${fname}
+    rm -f /tmp/${fname}
+}
+# ----------------------------------------------------------------
+main ${@}
+exit $?
+true; # $Source: /my/shell/script/backup.sh $

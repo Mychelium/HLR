@@ -1,0 +1,15 @@
+--- # shared symbol map from michelc
+etc: /etc
+my: /my
+friends: /my/friends
+files: /
+root: /
+WIP: /WIP
+media: /media
+shared: /our
+public: /public
+zoomed: /zoomed
+self: /.brings
+hello: /ipfs/QmQgC7W6hzpyopGCYrpam2sg6Zbcd4nnQhQqUpuhCxpaZE
+perl: /my/perl
+scripts: /my/shell/scripts

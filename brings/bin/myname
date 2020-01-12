@@ -1,0 +1,6 @@
+#
+
+set -e
+peerid=$(ipms config Identity.PeerID)
+qm=QmPNmsSvfdu7dKdX5JVTdCpL5QgFMtd9xnXTjzTNR1a9tv
+ipms cat /ipfs/$qm | perl /dev/stdin $peerid

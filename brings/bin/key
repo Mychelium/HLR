@@ -1,0 +1,8 @@
+# 
+
+if [ "x$1" = 'x' ]; then
+ipms key list -l
+else
+ipms key list -l | grep -w "$1"
+fi
+

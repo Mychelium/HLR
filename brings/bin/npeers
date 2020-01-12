@@ -1,0 +1,3 @@
+#
+echo -n "number of peers: "
+ipms swarm peers  | wc -l

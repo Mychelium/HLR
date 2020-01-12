@@ -1,0 +1,5 @@
+#!/usr/bin/tail +2
+
+This is the no-op script 
+
+located at $Source: /my/other/scripts/nop.sb$
