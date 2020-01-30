@@ -2,6 +2,7 @@
 
 core=hlr
 set -e
+export PROJDIR=${PRODIR:-$(pwd)}
 # INSTALLING IPFS ...
 # -------------------
 ver='v0.4.22';
@@ -24,10 +25,14 @@ echo IPMS_HOME=$IPMS_HOME
 export PATH="$IPMS_HOME/bin:$PATH"
 # install go-ipfs ...
 if test ! -x $IPMS_HOME/bin/ipms; then
-  if test ! -e $IPMS_HOME/go-ipfs_${ver}_linux-amd64.tar.gz; then
+  if test ! -e $PROJDIR/ipms/go-ipfs_${ver}_linux-amd64.tar.gz; then
+    if [ $(uname -s) = 'Linux' ]; then
     curl https://dist.ipfs.io/go-ipfs/${ver}/go-ipfs_${ver}_linux-amd64.tar.gz -o $IPMS_HOME/go-ipfs_${ver}_linux-amd64.tar.gz;
+    else
+     echo "please install IPFS manually ... for $(uname -s)"
+    if
   fi
-  tar zxfv $IPMS_HOME/go-ipfs_${ver}_linux-amd64.tar.gz
+  tar zxfv $PROJDIR/ipms/go-ipfs_${ver}_linux-amd64.tar.gz
   mv go-ipfs/* $IPMS_HOME/bin
   ln $IPMS_HOME/bin/ipfs $IPMS_HOME/bin/ipms
   rmdir go-ipfs
@@ -37,8 +42,12 @@ rm $IPFS_PATH/api
 fi
 if test ! -e $IPFS_PATH/config; then
   # defined ipms ports
-  apiport=5001
-  gwport=8080
+  if test -e $PROJDIR/config.sh; then
+   . $PROJDIR/config.sh
+  else 
+    apiport=5001
+    gwport=8080
+  fi
   ipms init
   ipms config Addresses.API /ip4/127.0.0.1/tcp/$apiport
   ipms config Addresses.Gateway /ip4/0.0.0.0/tcp/$gwport

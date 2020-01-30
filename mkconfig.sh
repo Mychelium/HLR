@@ -44,10 +44,29 @@ if [ "x$ans" != 'x' ]; then
 export IPFS_PATH=$ans
 fi
 # -------------------------------------------
+echo "which port you'd like to use for ipfs'gateway ?"
+gwport=8080
+echo -n "[$gwport] "
+read ans
+if [ "x$ans" != 'x' ]; then
+gwport=$ans
+fi
+# -------------------------------------------
+echo "which port you'd like to use for ipfs'api ?"
+apiport=5001
+echo -n "[$apiport] "
+read ans
+if [ "x$ans" != 'x' ]; then
+apiport=$ans
+fi
+# -------------------------------------------
 # write out config.yml for next time!
 cat > config.sh <<EOF
 # ipms config files
 export PROJDIR=$PROJDIR
+# ------------
+apiport=$apiport
+gwport=$gwport
 # ------------
 export ${CORE}_HOME=\${${CORE}__HOME:-$HLR_HOME}
 export PERL5LIB=\${PERL5LIB:-$PERL5LIB}
@@ -73,7 +92,12 @@ if [ "xPROJDIR" != 'x' ]; then echo "PROJDIR: $PROJDIR"; fi
 
 cat > $PROJDIR/envrc.sh <<EOF
 # config ($(date +'%D %T'))
-export ${CORE}_HOME=${HLR_HOME:-$HOME/.$core} 
+export IPMS_HOME="${IPMS_HOME:-$HOME/.ipms}"
+export ${CORE}_HOME="${HLR_HOME:-$HOME/.$core}"
+
+if [ -d \$${CORE}_HOME/bin ]; then
+  export PATH="\$${CORE}_HOME/bin:\$IPMS_HOME/bin:\$PATH"
+fi
 if [ -d PERL5LIB=\$HOME/.$core/perl5/lib/perl5 ]; then
     export PERL5LIB=\$HOME/.$core/perl5/lib/perl5
 else
@@ -85,12 +109,6 @@ export IPFS_PATH=\${IPFS_PATH:-\$HOME/.$core/ipfs}
 if ! test -e \$IPFS_PATH/config; then
   echo "IPFS_PATH: not properly set (\$IPFS_PATH)."
   return $$
-fi
-
-if test -e \$${CORE}_HOME/envrc.sh; then
-. \$${CORE}_HOME/envrc.sh
-else
-export PATH="\$${CORE}_HOME/bin:\$IPMS_HOME/bin:\$PATH"
 fi
 
 if [ "x\$PROJDIR" = 'x' ]; then
