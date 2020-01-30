@@ -1,15 +1,21 @@
 #
 
+symb=core
+core=hlr
 set -e
 if ! which ipms 1>/dev/null; then
 alias ipms=ipfs
 fi
 
-qm=$(ipms add -r -Q brings)
+qm=$(ipms add -r -Q $core)
 echo qm: $qm
-key=$(ipms key list -l | grep -w code | cut -d' ' -f 1)
+if ! ipms key list -l | grep -w -q $symb;  then
+  echo \$?: $?
+  ipms key gen -t rsa -s 3072 $symb
+fi
+key=$(ipms key list -l | grep -w $symb | cut -d' ' -f 1)
 echo key: $key
-ipms name publish --allow-offline --key=code /ipfs/$qm
+ipms name publish --allow-offline --key=$symb /ipfs/$qm
 echo 127: http://127.0.0.1:8080/ipfs/$qm
 echo webui: http://127.0.0.1:5001/webui/#/explore/ipfs/$qm
 

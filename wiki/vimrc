@@ -1,0 +1,40 @@
+" VimRC file
+" $Source: /my/setup/rcfiles/vimrc$
+" $qm: $
+
+" for vimwiki:
+set nocompatible
+filetype plugin on
+syntax on
+let g:vimwiki_list = [{'path': '~/pwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+
+set enc=8bit-utf-8
+set fileencoding=utf-8
+set nodigraph
+set nowrap
+
+source $VIMRUNTIME/mswin.vim
+behave mswin
+set tw=0
+set ts=2
+set et
+set sw=3
+
+set backup
+"set patchmode=~1
+set writebackup
+
+set backupdir=~/.vim/backups//
+"let $TMP=/tmp
+"set directory=~/.vim/swapfiles//,.,$TMP,$TEMP//
+set directory=~/.vim/swapfiles//,.,/tmp,
+
+set undodir=./.vim-undo//
+set undodir+=~/.vim/undo//
+set undofile
+
+
+if &term == "screen" || !match(&term, "xterm")
+  set title
+endif
+
