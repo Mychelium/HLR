@@ -1,12 +1,12 @@
 #
 # defaults:
-core='hlr'
+core='hlrings'
 #CORE=${core^^} # bash only
-CORE=$(echo $core | tr [a-z] [A-Z])
+CORE=$(echo $core | sed -e 's/aeiouy//' | tr [a-z] [A-Z] | cut -c-3)
 export PROJDIR=$(pwd)
 eval "export ${CORE}_HOME=\${${CORE}_HOME:-\$HOME/.$core}"
 export IPMS_HOME=${IPMS_HOME:-$HOME/.ipms}
-export IPFS_PATH=${IPFS_PATH:-$HOME/.$core/ipfs}
+export IPFS_PATH=${IPFS_PATH:-$HOME/.ipfs}
 export PERL5LIB=${PERL5LIB:-$HOME/.$core/perl5/lib/perl5}
 
 echo "$0: HoloRing Configuration Script"
@@ -103,7 +103,6 @@ if [ -d PERL5LIB=\$HOME/.$core/perl5/lib/perl5 ]; then
 else
   echo "PERL5LIB: not properly set (\$PERL5LIB)."
 fi
-export IPMS_HOME=${IPMS_HOME:-$HOME/.ipms}
 export IPFS_PATH=\${IPFS_PATH:-\$HOME/.$core/ipfs}
 
 if ! test -e \$IPFS_PATH/config; then
@@ -113,7 +112,9 @@ fi
 
 if [ "x\$PROJDIR" = 'x' ]; then
 PROJDIR=$(pwd)
-PATH="\$PROJDIR/bin:\$PATH"
+fi
+if [ -d \$PROJDIR/bin ]; then
+  PATH="\$PROJDIR/bin:\$PATH"
 fi
 
 if ! ipms swarm addrs local 1>/dev/null 2>&1; then

@@ -1,14 +1,17 @@
 #
 # This script either
-# ... publish a hlr folder (if it exits)
+# ... publish a hlrings folder (if it exits)
 #     and/or sync'd up the mfs version of it
+core=hlrings
 set -e
 if echo "$0" | grep -q '^/'; then
   rootdir="${0%/bin/*}"
 else
-  rootdir="$(pwd)"; rootdir="${rootdir%/bin}"
+  rootdir="$(pwd)/$0"; rootdir="${rootdir%/bin}"
 fi
+echo "rootdir: $rootdir"
 symb="${rootdir##*/}"
+# ----------------------------------------------------------------
 if ipms key list | grep -q -w $symb; then
  key=$(ipms key list -l | grep -w $symb | cut -d' ' -f 1)
  echo key: $key
@@ -29,7 +32,7 @@ if ipath=$(ipms --timeout 5s resolve /ipns/$key 2>/dev/null); then
  echo "$symb: $ipath # (global)"
 else
   # default to Elvis C. Lagoo
-  # ipms add -r -Q $PROJDIR/.brings/$symb
+  # ipms add -r -Q $PROJDIR/.$core/$symb
   if [ "x$qm" = 'x' ]; then
   ipath='/ipfs/QmVEwqUqoS6CkoEafHtmduUp1gsMGbsyY6fy1mtNwHVddS'
   else 
@@ -37,23 +40,22 @@ else
   fi
   echo "$symb: ${ipath#/ipfs/}"
 fi
-if ipms files stat --hash /.brings 1>/dev/null 2>&1; then
-  if pv=$(ipms files stat --hash /.brings/$symb 2>/dev/null); then
-    ipms files rm -r /.brings/$symb
-    ipms files cp $ipath /.brings/$symb
+if ipms files stat --hash /.$core 1>/dev/null 2>&1; then
+  if pv=$(ipms files stat --hash /.$core/$symb 2>/dev/null); then
+    ipms files rm -r /.$core/$symb
+    ipms files cp $ipath /.$core/$symb
     if [ "${ipath#/ipfs/}" != "$pv" ]; then
-      if ipms files rm -r /.brings/$symb/prev 2>/dev/null; then true; fi
-      ipms files cp /ipfs/$pv /.brings/$symb/prev
-      ipath=/ipfs/$(ipms files stat --hash /.brings/$symb)
+      if ipms files rm -r /.$core/$symb/prev 2>/dev/null; then true; fi
+      ipms files cp /ipfs/$pv /.$core/$symb/prev
+      ipath=/ipfs/$(ipms files stat --hash /.$core/$symb)
       echo "$symb: ${ipath#/ipfs/} # (new)"
     fi
   else
-    ipms files cp $ipath /.brings/$symb
+    ipms files cp $ipath /.$core/$symb
   fi
 else
-  ipms files mkdir /.brings
-  ipms files cp $ipath /.brings/$symb
+  ipms files mkdir /.$core
+  ipms files cp $ipath /.$core/$symb
 fi
 # ---------------------------------------------------------------------
-
 

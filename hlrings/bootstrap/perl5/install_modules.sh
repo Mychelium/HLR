@@ -13,6 +13,7 @@ PERL5LIB=${PERL5LIB:-$HLR_HOME/perl5/lib/perl5}
 # perl's local lib
 eval $(perl -I$PERL5LIB -Mlocal::lib=${PERL5LIB%/lib/perl5})
 
+perl -MCPAN -Mlocal::lib=${PERL5LIB%/lib/perl5} -e 'CPAN::install(YAML::XS)'
 perl -MCPAN -Mlocal::lib=${PERL5LIB%/lib/perl5} -e 'CPAN::install(YAML::Syck)'
 perl -MCPAN -Mlocal::lib=${PERL5LIB%/lib/perl5} -e 'CPAN::install(MIME::Base32)'
 perl -MCPAN -Mlocal::lib=${PERL5LIB%/lib/perl5} -e 'CPAN::install(Math::BigInt)'
