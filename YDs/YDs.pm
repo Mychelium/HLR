@@ -38,6 +38,7 @@ if (__FILE__ eq $0) {
 
 # --------------------------------------------
 sub get_peerkey {
+ use YAML::Syck qw();
  our $nobodykey = 'QmcEAhNT1epnXAVzuaFmvHWrQYZkxiiwipsL3W4hL1pHY9';
  my $nickname = shift;
  printf "nickname: %s\n",$nickname;

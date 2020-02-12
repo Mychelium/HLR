@@ -1,0 +1,19 @@
+#
+
+set -e
+peerid=$(ipms config Identity.PeerID)
+fullname=$(perl -S fullname.pl $peerid)
+echo fullname: $fullname
+apihost=$(ipms config Addresses.API | cut -d'/' -f 3)
+apiport=$(ipms config Addresses.API | cut -d'/' -f 5)
+echo apiport: $apiport
+gwhost=$(ipms config Addresses.Gateway | cut -d'/' -f 3)
+gwport=$(ipms config Addresses.Gateway | cut -d'/' -f 5)
+echo gwport: $gwport
+ipfs swarm addrs local
+ipath=$(ipms name resolve /ipns/webui.ipfs.io)
+echo  url: http://$gwhost:$gwport/ipns/$peerid
+echo  url: http://$apihost:$apiport/webui/#/files/my
+echo  url: http://$apihost:$apiport$ipath/#/
+
+
