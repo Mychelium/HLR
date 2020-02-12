@@ -1,0 +1,10 @@
+#
+
+if [ "x$1" = 'x-a' ]; then
+echo pp: hl
+echo core: hlring
+echo pkg: HLR
+echo name: holoRing
+else
+echo -n hlring
+fi

@@ -1,0 +1,9 @@
+#
+
+user=$(/usr/bin/whoami)
+host=$(/bin/hostname)
+nick=$(perl -S nickname.pl)
+
+echo "$nick <$user@$host>"
+exit $?
+true

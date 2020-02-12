@@ -1,0 +1,6 @@
+#
+
+#if ! which ipms 1>/dev/null 2&>1; then
+# alias ipms='ipfs'
+#fi
+ipfs --offline config Identity.PeerID
