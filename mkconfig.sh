@@ -1,8 +1,21 @@
 #
-# defaults:
-core='hlrings'
+
+if [ "x$HLRBOOT" != 'x' ]; then
+  export PATH="$HLRBOOT/bin:$PATH"
+else
+  if [ -e detect.sh ]; then
+    . detect.sh
+  else
+    echo "// please run the following before"
+    echo "source \$HLRBOOT/detect.sh"
+    exit -$$
+  fi 
+fi
+
+core=$(core)
 #CORE=${core^^} # bash only
 CORE=$(echo $core | sed -e 's/aeiouy//' | tr [a-z] [A-Z] | cut -c-3)
+
 export PROJDIR=$(pwd)
 eval "export ${CORE}_HOME=\${${CORE}_HOME:-\$HOME/.$core}"
 export IPMS_HOME=${IPMS_HOME:-$HOME/.ipms}
@@ -10,9 +23,13 @@ export IPFS_PATH=${IPFS_PATH:-$HOME/.ipfs}
 export PERL5LIB=${PERL5LIB:-$HOME/.$core/perl5/lib/perl5}
 
 echo "$0: HoloRing Configuration Script"
+echo Booting from HLRBOOT: $HLRBOOT
 if test -e config.sh; then
-	. $(pwd)/config.sh
-else
+. $(pwd)/config.sh
+else # [
+ if test -e $HLRBOOT/config.sh; then
+ . $HLRBOOT/config.sh
+ else # [
 
 # Ask questions ...
 # -------------------------------------------
@@ -61,20 +78,24 @@ apiport=$ans
 fi
 # -------------------------------------------
 # write out config.yml for next time!
-cat > config.sh <<EOF
+cat > $HLRBOOT/config.sh <<EOF
 # ipms config files
+
 export PROJDIR=$PROJDIR
 # ------------
 apiport=$apiport
 gwport=$gwport
 # ------------
 export ${CORE}_HOME=\${${CORE}__HOME:-$HLR_HOME}
-export PERL5LIB=\${PERL5LIB:-$PERL5LIB}
 export IPMS_HOME=\${IPMS_HOME:-$IPMS_HOME}
 export IPFS_PATH=\${IPFS_PATH:-$IPFS_PATH}
 #export MFS_HOME=\${MFS_HOME:-\$PROJDIR/mfs$}
+
+# PERL5LIB=${PERL5LIB:-$HLR_HOME/perl5/lib/perl5}
+
+export PERL5LIB=\${PERL5LIB:-$PERL5LIB}
 EOF
-chmod a+x config.sh
+chmod a+x $HLRBOOT/config.sh
 
 if false; then
 MFS_HOME=${MFS_HOME:-$PROJDIR/mfs}
@@ -82,7 +103,8 @@ echo "MFS_HOME: $MFS_HOME"
 #PATH="$MFS_HOME/.$core/bin:$PATH"
 fi
 
-fi
+fi # ]
+fi # ]
 
 if [ "xPROJDIR" != 'x' ]; then echo "PROJDIR: $PROJDIR"; fi
 # copy envrc to $HLR_HOME/
@@ -92,17 +114,41 @@ if [ "xPROJDIR" != 'x' ]; then echo "PROJDIR: $PROJDIR"; fi
 
 cat > $PROJDIR/envrc.sh <<EOF
 # config ($(date +'%D %T'))
-export IPMS_HOME="${IPMS_HOME:-$HOME/.ipms}"
-export ${CORE}_HOME="${HLR_HOME:-$HOME/.$core}"
-
-if [ -d \$${CORE}_HOME/bin ]; then
-  export PATH="\$${CORE}_HOME/bin:\$IPMS_HOME/bin:\$PATH"
+if [ "x\$HLRBOOT" != 'x' ]; then
+  export PATH="\$HLRBOOT/bin:$PATH"
 fi
-if [ -d PERL5LIB=\$HOME/.$core/perl5/lib/perl5 ]; then
-    export PERL5LIB=\$HOME/.$core/perl5/lib/perl5
+# source custom setting ...
+if test -e \$HLRBOOT/config.sh; then
+. $HLRBOOT/config.sh
+fi
+
+# IPMS:
+export IPMS_HOME="${IPMS_HOME:-$HOME/.ipms}"
+if [ -d \$IPMS_MODE ]; then
+  export PATH="\$IPMS_MODE/bin:\$PATH"
+fi
+
+# $core:
+export ${CORE}_HOME="${HLR_HOME:-$HOME/.$core}"
+if [ -d \$${CORE}_HOME/bin ]; then
+  export PATH="\$${CORE}_HOME/bin:\$PATH"
+fi
+
+# Perl: 
+if [ -d \$PERL5LIB ]; then
+  eval \$(perl -I\$PERL5LIB -Mlocal::lib=\${PERL5LIB%/lib/perl5})
+  export PERL5LIB=\${PERL5LIB%%:*}
+else
+if [ -d \$HOME/.$core/perl5/lib/perl5 ]; then
+  PERL5LIB=\$HOME/.$core/perl5/lib/perl5
+  eval \$(perl -I\$PERL5LIB -Mlocal::lib=\${PERL5LIB%/lib/perl5})
+  export PERL5LIB=\${PERL5LIB%%:*}
 else
   echo "PERL5LIB: not properly set (\$PERL5LIB)."
 fi
+fi
+
+# IPFS:
 export IPFS_PATH=\${IPFS_PATH:-\$HOME/.$core/ipfs}
 
 if ! test -e \$IPFS_PATH/config; then
@@ -119,7 +165,7 @@ fi
 
 if ! ipms swarm addrs local 1>/dev/null 2>&1; then
   echo "WARNING: no ipms daemon running !"
-  ipmsd.sh
+  # ipmsd.sh
 else
   echo "ipms already running"
 fi
