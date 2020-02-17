@@ -1,10 +1,28 @@
 #
+core=hlrings
 
-if [ "x$1" = 'x-a' ]; then
+
+rootdir=${0%bin/*}
+if ! echo $rootdir | grep -q '^/' ; then
+rootdir="$(pwd)/$rootdir"
+fi
+rootdir=${rootdir%/}
+
+if [ "x$1" = 'x-k' ]; then
+  shift;
+  echo export HLRBOOT=$rootdir
+else
+if [ "x$1" = 'x-y' ]; then
+shift;
 echo pp: hl
-echo core: hlring
+echo core: $core
 echo pkg: HLR
 echo name: holoRing
+echo HLRBOOT: $rootdir
 else
-echo -n hlring
+echo -n $core
 fi
+fi
+
+
+true; # $Source: /my/shell/scripts/core.sh$

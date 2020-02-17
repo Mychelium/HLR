@@ -1,6 +1,12 @@
 # installing perlmodules ...
 
-rootdir=${HLR_HOME:-$HOME/.hlr}
+if which core 1>/dev/null; then
+core=$(core)
+echo core: $core
+else
+ exit -$$
+fi
+rootdir=${HLR_HOME:-$HOME/.$core}
 
 if test -e /etc/environment; then
    . /etc/environment
