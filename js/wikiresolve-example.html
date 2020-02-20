@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<div id=wiki>
+  Ceci est un wiki qui traite de [[kotlin]] et [[blockring]].
+</div>
+
+<script>
+const maps_hash = 'QmNpBWwGCmWfVMYVL5wrEAyEfJtoFLZNteeiVs3fXdzbJc';
+//const map_url = 'https://gateway.ipfs.io/ipfs/' + maps_hash + '/wikimap.json';
+const map_url = 'http://127.0.0.1:8080/ipfs/' + maps_hash + '/wikimap.json';
+
+// anonymous functions ...
+const status = resp => {
+  if (resp.status >= 200 && resp.status < 300) {
+    return Promise.resolve(resp)
+  }
+  return Promise.reject(new Error(resp.statusText))
+}
+
+
+const get_url = (e,u) => { // e=elements, u=url }
+   fetch(u, { mode:'cors' })
+     .then(status)
+     .then( resp => resp.json() )
+     .then( map => {
+        buf = e.innerHTML;
+        for (let key in map) {
+          let rex = RegExp('\\[\\['+key+'\\]\\]')
+          let href = map[key]
+          buf = buf.replace(rex,'<a href="'+href+'">'+key+'</a>');
+        }
+        e.innerHTML = buf;
+      } 
+     )
+   .catch(function(error) {
+      console.log('catch: '+error)
+   });
+
+}
+ 
+e = document.getElementById('wiki');
+get_url(e,map_url);
+ 
+</script>
