@@ -9,11 +9,16 @@ var framaid='myframa';
 url: <a href=https://mensuel.framapad.org/p/{{framaid}}?lang=en>{{framaid}}</a>
 </div>
 
+<h4>{{framaid}} content:</h4>
 <div id=text> empty text </div>
+<hr>
+<h4>original page content:</h4>
+<div id=orig> original code </div>
 
 
 <script>
  var frama_url = 'https://mensuel.framapad.org/p/';
+ var orig_content = document.getElementsByClassName('content')[0].innerHTML;
  var bod = document.getElementsByTagName('body')[0];
  bod.innerHTML = bod.innerHTML.replace(/\{\{framaid}}/g,framaid);
  // try to access a pad that doesn't exist :
@@ -25,11 +30,11 @@ url: <a href=https://mensuel.framapad.org/p/{{framaid}}?lang=en>{{framaid}}</a>
    let b = document.getElementsByTagName('body')[0];
    if (resp.status <= 200 && resp.status < 400) {
      b.innerHTML = b.innerHTML.replace(/\[\[framapad]]/,
-       '<a href="'+url+'">framapad</a>')
+       '<a href="'+url+'">framapad'+n+'</a>')
    } else if (resp.status == 404) {
       let url = frama_url+'framapad'+n+'?lang=en&showControls=true&showChat=false&showLineNumbers=true&useMonospaceFont=true';
      b.innerHTML = b.innerHTML.replace(/\[\[framapad]]/,
-       '<a href="'+url+'" target=_new>framapad [edit]</a>')
+       '<a href="'+url+'" target=_new>framapad'+n+' [edit]</a>')
    }
   })
  .catch(error)
@@ -57,6 +62,9 @@ url: <a href=https://mensuel.framapad.org/p/{{framaid}}?lang=en>{{framaid}}</a>
    if (text && (e = document.getElementById('text') ) ) {
      e.innerHTML = text;
    }
+
+   let orig = document.getElementById('orig');
+   orig.innerHTML = orig_content;
   })
  .catch(error);
  
