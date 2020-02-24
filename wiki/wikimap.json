@@ -1,0 +1,13 @@
+{ "title": "wikimap (json)",
+  "kotlin":"https://duckduckgo.com/?q=kotlin+okhttp",
+ "blockring":"https://github.com/gradual-quanta/minichain",
+ "holoRing":"https://github.com/mychelium/HLR",
+ "fractal":"https://duckduckgo.com/?q=!+fractal+wiki",
+ "wiki":"https://duckduckgo.com/?q=!+holoRing+wiki",
+ "keyword":"https://duckduckgo.com/?q=!+holowiki+keywords",
+ "WikiLinks":"https://duckduckgo.com/?q=!+holoRing+WikiLinks",
+ "wikipedia":"https://wikipedia.org/",
+ "blockchain":"https://duckduckgo.com/?q=!+%2Bmychelium+blockchain",
+ "double-brakets":"https://duckduckgo.com/?q=!+double-brakets-in+holowiki",
+ "post command":"ipms --offline name publish --key=wikimap --allow-offline /ipfs/$(ipms add -w -Q test/wikimap.json)"
+}
