@@ -32,7 +32,16 @@ for more pertinance...
 address : <https://ipfs.blockringtm.ml/ipns/QmVuhSv2REdJwMAauvvnTsVbvb95kRXGFprp3gVQUj8z6d/wikimap.json>
 and can be later on with the proper sharding be collaborativelly automatically update to reflect a global map of the worldwide wiki.
 Rendering the system totally distributed, peer-to-peer.
+<p>[[IPNS]] is the mutable naming services on top of [[IPLD]] / [[IPFS]] and require a long "resolution" time
+for the discovery of the node who has the name record, hence leading to about 60sec delay time.
+so the [wikilinks] will be resolve only after that delay; As a consequence the links in this page
+won't be immediately evaluated, leaving you some time to see how they are written; alternatively
+you can visit the "source view" of this page for more details on how it is done.
 
+We can improve the speed the "name resolution" of IPNS by using an IPFS compatible [hash][MUT-224]
+specially crafted for handling mutable in a faster way (i.e. where we don't need to collect 20 confirmations of the names
+to decide what is the best uptodate value pointed by the key), or by using a more centralized approach like a DNS
+or the hosted naming services [[gitNS]].
 <p>
 I keep a copy of the map in a central place for archiving purpose on [[GitHub]]
 under the repository [mychelium/HLR](https://mychelium.github.io/HLR/wiki/wikimap.json).
@@ -40,7 +49,7 @@ under the repository [mychelium/HLR](https://mychelium.github.io/HLR/wiki/wikima
 Aggregation of shards of the wikimap can be done in serveral ways,
 <ul>
 <li> automatic merging of the blockrings maintaining the map,
-<li> issuing pull requests on the GitHub repository containing they [[wikimap.json]]
+<li> issuing pull requests on the GitHub repository containing the [[wikimap.json]]
 <li> querying major search engine to see what [[WikiLinks]] are out there
 <li> synchronizing with HoloRings' trusted friends
 <li> placing a special [[%index-me]] tags in your map file
