@@ -1,7 +1,9 @@
 // glocal wikilink resolver ...
 
-const maps_key = 'QmVuhSv2REdJwMAauvvnTsVbvb95kRXGFprp3gVQUj8z6d';
-const map_url = 'https://ipfs.blockringtm.ml/ipns/' + maps_key + '/wikimap.json';
+const maps_hash = 'QmNpBWwGCmWfVMYVL5wrEAyEfJtoFLZNteeiVs3fXdzbJc';
+const map_url = 'https://ipfs.blockring™.ml/ipns/' + maps_hash + '/wikimap.json';
+// the wikimap is posted using the command:
+// ipms --offline name publish --key=wikimap --allow-offline /ipfs/$(ipms add -w -Q test/wikimap.json)
 
 e = document.getElementById('wiki');
 get_url(e,map_url);
@@ -33,8 +35,11 @@ function get_url(e,u) { // e=elements, u=url
         buf = buf.replace(rex,"<a target=_blank href=\"https://duckduckgo.com/?q=!g+$1+%2B%22%23mychelium%22\">$1</a>");
         // links : #hashtag
         rex = RegExp('#([a-z][\\S]+)','ig')
-        if (match = buf.match(rex)) { console.log(match) }
         buf = buf.replace(rex,"<a target=_blank href=\"https://duckduckgo.com/?q=!g+%2B%22%23$1%22\">#$1</a>");
+        // links : <url>
+        rex = RegExp('<([a-z][\\S]+)>','ig')
+        if (match = buf.match(rex)) { console.log(match) }
+        buf = buf.replace(rex,"&lt;<a href=\"$1\">$1</a>&gt;");
         e.innerHTML = buf;
         if (o = document.getElementById('orig')) {
           o.innerHTML = orig;

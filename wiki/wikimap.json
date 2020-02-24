@@ -1,5 +1,6 @@
-{ "title": "wikimap (json)",
+{ "title": "#wikimap (json)",
   "kotlin":"https://duckduckgo.com/?q=kotlin+okhttp",
+  "mychelium":"https://duckduckgo.com/?q=!g+inurl:mychelium",
  "blockring":"https://github.com/gradual-quanta/minichain",
  "holoRing":"https://github.com/mychelium/HLR",
  "fractal":"https://duckduckgo.com/?q=!+fractal+wiki",
@@ -9,5 +10,6 @@
  "wikipedia":"https://wikipedia.org/",
  "blockchain":"https://duckduckgo.com/?q=!+%2Bmychelium+blockchain",
  "double-brakets":"https://duckduckgo.com/?q=!+double-brakets-in+holowiki",
- "post command":"ipms --offline name publish --key=wikimap --allow-offline /ipfs/$(ipms add -w -Q test/wikimap.json)"
+ "%index-me":"https://mychelium.github.io/HLR/wiki/wikimap.json",
+ "publish command":"ipms --offline name publish --key=wikimap --allow-offline /ipfs/$(ipms add -w -Q ../wiki/wikimap.json)"
 }
