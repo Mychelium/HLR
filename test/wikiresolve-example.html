@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<div id=wiki>
+<h3>holoLinks</h3>
+
+HoloLinks are special type of wiki links that are automagically
+resolve with the help of [[glocal]] maps.
+
+<p>
+for example (in French) :
+<br>
+<code>  Ceci est un wiki qui traite de [[kotlin]] et #blockring,
+voire de [[fractal]] wikis.
+</code>
+
+<p>
+All the links in this exemple are resolved with the [[holoLink Resolver]],
+it demonstrates that simple '[[WikiLinks]]' can be used to establish
+cross-wikis references to an [other wikipage][WikiLinks].
+<p>
+wikilinks are of the form of :
+
+<code><pre>'[[keyword]]' will be replaced with [[keyword]]
+'[text][keyword]' will be replaced with [text][keyword]
+'[text](https://example.com)' will be replaced w/ [text](https://example.com)
+<!--
+'[KeyWord]'
+-->
+</pre></code>
+
+<h3>how the glocal resolver works ?</h3>
+ 
+<p>
+It works by having js script to scanning the current webpage
+and replacing the ''[[double-brakets]]''
+with the [URL][double-brakets] registered in the [wikimap.json](wikimap.json) file.
+<p>
+A map file is a simple associative table that links
+a keyword (the wikilink) to a URL
+<p>
+If the keyword in the '[[ ]]' is not in the map, then a search url is used instead : like [a-keyword-not-in-the-table][NotInTable]
+<p>The map can be stored on [[IPFS]] or even on a [[holoRing]] for
+collaborative publishing of wikis at the global scale.
+
+<div><small>courtesy [[holoTeam]] &amp; powered by #mychelium technology</small></div>
+</div>
+<hr>
+<h3>original code</h3>
+<p>in fact the original code is show below:
+<div id=orig><i>original code placeholder</i></div>
+
+<script>
+const maps_hash = 'QmNpBWwGCmWfVMYVL5wrEAyEfJtoFLZNteeiVs3fXdzbJc';
+//const map_url = 'https://gateway.ipfs.io/ipfs/' + maps_hash + '/wikimap.json';
+let parent_url = document.location.href;
+parent_url = parent_url.replace(/\/[^\/]*$/,'');
+
+console.log('parent_url: '+parent_url);
+const map_url = parent_url + '/wikimap.json';
+
+console.log('map_url: '+map_url);
+
+// anonymous functions ...
+const status = resp => {
+  if (resp.status >= 200 && resp.status < 300) {
+    return Promise.resolve(resp)
+  }
+  return Promise.reject(new Error(resp.statusText))
+}
+
+
+const get_url = (e,u) => { // e=elements, u=url }
+   fetch(u, { mode:'cors' })
+     .then(status)
+     .then( resp => resp.json() )
+     .then( map => {
+        buf = e.innerHTML;
+        let orig = buf;
+        // links : [text info](url)
+        let rex = RegExp('\\[([^\\]]+)\\]\\(([^\\)]+)\\)(?!\')','g')
+        buf = buf.replace(rex,'<a href="'+"$2"+'">'+"$1"+'</a>');
+        for (let key in map) {
+          let href = map[key];
+          // negative lookahead for ' ; [[keyword]]
+          rex = RegExp('\\[\\['+key+'\\]\\](?!\')','g')
+          buf = buf.replace(rex,'<a href="'+href+'">'+key+'</a>');
+          // links : [text info][keyword]
+          rex = RegExp('\\[([^\\]]+)\\]\\['+key+'\\](?!\')','g')
+          buf = buf.replace(rex,'<a href="'+href+'">'+"$1"+'</a>');
+        }
+        // links : [text info][keyref]
+        rex = RegExp('\\[([^\\]]+)\\]\\[([^\\]]+)\\](?!\')','g')
+        buf = buf.replace(rex,"<a target=_blank href=\"https://duckduckgo.com/?q=!g+$2+%2B%23mychelium\">$1</a>");
+        // links : [[keyref]]
+        rex = RegExp('\\[\\[([^\\]]+)\\]\\](?!\')','g')
+        buf = buf.replace(rex,"<a target=_blank href=\"https://duckduckgo.com/?q=!g+$1+%2B%22%23mychelium%22\">$1</a>");
+        // links : #hashtag
+        rex = RegExp('#([a-z][\\S]+)','ig')
+        if (match = buf.match(rex)) { console.log(match) }
+        buf = buf.replace(rex,"<a target=_blank href=\"https://duckduckgo.com/?q=!g+%2B%22%23$1%22\">#$1</a>");
+        e.innerHTML = buf;
+        if (o = document.getElementById('orig')) {
+          o.innerHTML = orig;
+        }  
+      } 
+     )
+   .catch(function(error) {
+      console.log('catch: '+error)
+   });
+
+}
+ 
+e = document.getElementById('wiki');
+get_url(e,map_url);
+ 
+</script>
