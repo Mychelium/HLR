@@ -1,8 +1,8 @@
 # HoloRing 
 
-Holoring is part of the [Planetary OS for Consciousness Evolution][PCE],
-and is the backbone of the new can of blockchain enabling
-[P2P Collective intelligence][P2PCI].
+Holoring is a new kind of blockchain, part of the [Planetary OS for Consciousness Evolution][PCE],
+and is the backbone 
+[P2P Collective intelligence][P2PCI] toolkit.
 
 [PCE]: https://duckduckgo.com/?q=Planetary+OS+for=consciousness+evolution
 [P2PCI]: https://github.com/P2PCI-project/P2PCI-Platform/wiki
